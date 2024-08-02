@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-nati
 import appStyles from "../styles/appStyles";
 import { useNavigation } from "@react-navigation/native";
 
-const Header = () => {
+const Header = ({ onRefresh }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -13,7 +13,7 @@ const Header = () => {
         <Text style={[appStyles.btnText]}>Filter</Text>
       </TouchableOpacity>
       <Text style={styles.connection}> Daily Connections</Text>
-      <TouchableOpacity style={styles.refresh}>
+      <TouchableOpacity style={styles.refresh} onPress={onRefresh}>
         <Text style={[appStyles.btnText]}>refresh</Text>
       </TouchableOpacity>
     </View>
@@ -24,12 +24,11 @@ const deviceWidth = Math.round(Dimensions.get("window").width);
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     height: 90,
     width: deviceWidth,
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop:30
+    marginTop:10
   },
   filterButton: {
     position: "absolute",
