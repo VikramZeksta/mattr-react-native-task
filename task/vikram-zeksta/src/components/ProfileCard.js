@@ -9,36 +9,10 @@ import {
 } from "react-native";
 import appStyles from "../styles/appStyles";
 import { useNavigation } from "@react-navigation/native";
-
-const convertDateFormat = (dob) => {
-    const [day, month, year] = dob.split('/');
-    return `${year}-${month}-${day}`;
-  };
-  
-  const calculateAge = (dob) => {
-    if (!dob) return 'N/A';
-  
-    const formattedDob = convertDateFormat(dob);
-    const birthDate = new Date(formattedDob);
-    if (isNaN(birthDate.getTime())) return 'Invalid Date';
-  
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDifference = today.getMonth() - birthDate.getMonth();
-  
-    if (
-      monthDifference < 0 ||
-      (monthDifference === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      age--;
-    }
-  
-    return age;
-  };
-  
+import { calculateAge } from "../utils/dateUtils";
 
 
-const ProfileCard = ({firstName,lastName,dob, city, image}) => {
+const ProfileCard = ({userId,firstName,lastName,dob, city, image}) => {
   const navigation = useNavigation();
     const age = calculateAge(dob);
   return (
@@ -53,7 +27,7 @@ const ProfileCard = ({firstName,lastName,dob, city, image}) => {
       </View>
 
       <TouchableOpacity style={styles.viewBtn} 
-       onPress={() => navigation.navigate("OtherProfile")}>
+       onPress={() => navigation.navigate("OtherProfile", { userId })}>
         <Text style={[appStyles.btnText]}>Profile View</Text>
       </TouchableOpacity>
     </View>
