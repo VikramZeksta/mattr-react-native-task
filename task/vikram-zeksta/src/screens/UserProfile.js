@@ -1,11 +1,20 @@
-import React from 'react'
+import React from "react";
+import { View, Text, StyleSheet } from "react-native";
 
 const UserProfile = () => {
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <View style={styles.container}>
+      <Text>User Profile</Text>
+    </View>
+  );
+};
 
-export default UserProfile
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
+
+export default UserProfile;

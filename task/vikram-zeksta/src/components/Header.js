@@ -1,11 +1,15 @@
 import React from "react";
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import appStyles from "../styles/appStyles";
+import { useNavigation } from "@react-navigation/native";
 
 const Header = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.filterButton}>
+      <TouchableOpacity style={styles.filterButton}
+      onPress={() => navigation.navigate("FilterProfile")}
+      >
         <Text style={[appStyles.btnText]}>Filter</Text>
       </TouchableOpacity>
       <Text style={styles.connection}> Daily Connections</Text>
