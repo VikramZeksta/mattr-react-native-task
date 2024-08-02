@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet,Dimensions } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const Footer = () => {
@@ -17,16 +17,21 @@ const Footer = () => {
   );
 };
 
+const deviceWidth = Math.round(Dimensions.get("window").width);
+
 const styles = StyleSheet.create({
   container: {
-    height: 50,
+    height: 70,
+    width:deviceWidth,
     backgroundColor: "#fff",
     position: "absolute",
     bottom: 0,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    gap:50
+    gap:50,
+    paddingTop:10,
+    paddingBottom:10
   },
   iconContainer:{
     alignItems: "center",

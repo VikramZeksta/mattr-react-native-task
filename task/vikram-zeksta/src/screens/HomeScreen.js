@@ -2,13 +2,14 @@ import React from "react";
 import { StyleSheet, Text, View, StatusBar } from "react-native";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import ProfileCard from "../components/ProfileCard";
 
 const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        <Text>Hi Vikram.</Text>
+        <ProfileCard />
       </View>
       <Footer/> 
     </View>
