@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import appStyles from "../styles/appStyles";
 import { useNavigation } from "@react-navigation/native";
 
@@ -7,8 +13,9 @@ const Header = ({ onRefresh }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.filterButton}
-      onPress={() => navigation.navigate("FilterProfile")}
+      <TouchableOpacity
+        style={styles.filterButton}
+        onPress={() => navigation.navigate("FilterProfile")}
       >
         <Text style={[appStyles.btnText]}>Filter</Text>
       </TouchableOpacity>
@@ -28,11 +35,11 @@ const styles = StyleSheet.create({
     width: deviceWidth,
     backgroundColor: "#fff",
     alignItems: "center",
-    marginTop:10
+    marginTop: 10,
   },
   filterButton: {
     position: "absolute",
-    marginTop:5,
+    marginTop: 5,
     right: 20,
   },
   connection: {
@@ -40,15 +47,15 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     marginTop: 15,
   },
-  refresh:{
+  refresh: {
     paddingVertical: 3,
     paddingHorizontal: 50,
-    backgroundColor: 'transparent',
-    marginTop:10,
+    backgroundColor: "transparent",
+    marginTop: 10,
     borderWidth: 1,
-    borderColor: '#CE1694',
+    borderColor: "#CE1694",
     borderRadius: 50,
-  }
+  },
 });
 
 export default Header;

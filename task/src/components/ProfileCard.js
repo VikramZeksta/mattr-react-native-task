@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from "prop-types"; 
+import PropTypes from "prop-types";
 import {
   Text,
   View,
@@ -12,9 +12,17 @@ import appStyles from "../styles/appStyles";
 import { useNavigation } from "@react-navigation/native";
 import { calculateAge } from "../utils/dateUtils";
 
-import dummyImage from "../../assets/blankImage.png"; 
+import dummyImage from "../../assets/blankImage.png";
 
-const ProfileCard = ({ userId, firstName, lastName, dob, city, image, country }) => {
+const ProfileCard = ({
+  userId,
+  firstName,
+  lastName,
+  dob,
+  city,
+  image,
+  country,
+}) => {
   const navigation = useNavigation();
   const age = calculateAge(dob);
   const imageSource = image ? { uri: image } : dummyImage;
@@ -27,7 +35,9 @@ const ProfileCard = ({ userId, firstName, lastName, dob, city, image, country })
           <Text style={styles.nameText}>
             {firstName} {lastName}, {age}
           </Text>
-          <Text style={styles.blackBtnText}>{city}, {country}</Text>
+          <Text style={styles.blackBtnText}>
+            {city}, {country}
+          </Text>
         </View>
 
         <TouchableOpacity
@@ -42,7 +52,7 @@ const ProfileCard = ({ userId, firstName, lastName, dob, city, image, country })
 };
 
 ProfileCard.propTypes = {
-  userId: PropTypes.string.isRequired,
+  userId: PropTypes.number.isRequired,
   firstName: PropTypes.string.isRequired,
   lastName: PropTypes.string.isRequired,
   dob: PropTypes.string.isRequired,
@@ -56,7 +66,7 @@ const redius = 25;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: '#fafafa',
+    backgroundColor: "#fafafa",
     borderRadius: 25,
     width: deviceWidth - 50,
     height: 350,

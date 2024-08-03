@@ -3,29 +3,18 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
-  TouchableOpacity,
   FlatList,
+  Image,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
-import { useRoute, useNavigation } from "@react-navigation/native";
-import data from "../../assets/data.json";
+import userData from "../../assets/data.json";
 import { calculateAge } from "../utils/dateUtils";
+import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const OtherProfile = () => {
+const UserProfile = () => {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
-  const navigation = useNavigation();
-  const route = useRoute();
-  const { userId } = route.params || {};
-  const user = data.find((user) => user.id === userId);
-
-  if (!user) {
-    return <Text>User not found</Text>;
-  }
-
-  const age = calculateAge(user.dob);
 
   const renderItem = ({ item }) => (
     <View style={styles.slide}>
@@ -33,13 +22,17 @@ const OtherProfile = () => {
     </View>
   );
 
+  const user = userData[0];
+  const age = calculateAge(user.dob);
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.cancelButton}
-        onPress={() => navigation.navigate("HomeTabs")}
+        onPress={() => navigation.navigate("HomeTabs", { screen: "Activity" })}
       >
-        <Icon name="times" size={35} color={"#2F3036"} style={styles.icon} />
+        <Icon name="times" size={30} color={"#2F3036"} />
       </TouchableOpacity>
       <View style={styles.imageContainer}>
         <FlatList
@@ -61,10 +54,10 @@ const OtherProfile = () => {
         <View style={styles.paginationContainer}>
           {user.photos.map((photo) => (
             <View
-              key={photo.id} // Use photo.id as the key
+              key={photo.id}
               style={[
                 styles.dot,
-                activeSlide === user.photos.findIndex(p => p.id === photo.id)
+                activeSlide === user.photos.findIndex((p) => p.id === photo.id)
                   ? styles.activeDot
                   : styles.inactiveDot,
               ]}
@@ -73,27 +66,12 @@ const OtherProfile = () => {
         </View>
       </View>
       <View style={styles.infoStyle}>
-        <View style={styles.nameStyle}>
-          <View>
-            <Text style={styles.nameText}>
-              {user.first_name} {user.last_name}, {age}
-            </Text>
-            <Text style={styles.cityText}>
-              {user.location.city}, {user.location.country}
-            </Text>
-          </View>
-          <TouchableOpacity
-            style={styles.iconContainer}
-            onPress={() => setIsLiked(!isLiked)} 
-          >
-            <Icon
-              name="heart"
-              size={30}
-              color={isLiked ? "#CE1694" : "#ccc"} 
-            />
-          </TouchableOpacity>
-        </View>
-
+        <Text style={styles.nameText}>
+          {user.first_name} {user.last_name}, {age}
+        </Text>
+        <Text style={styles.cityText}>
+          {user.location.city}, {user.location.country}
+        </Text>
         <View>
           <Text style={styles.contentText}>
             Hey, I'm {user.first_name}, a {age}-year-old marketing enthusiast
@@ -128,21 +106,12 @@ const styles = StyleSheet.create({
   },
   slide: {
     width: deviceWidth,
-    height: 500,
+    height: 470,
   },
   image: {
     width: deviceWidth,
-    height: 500,
+    height: 470,
     resizeMode: "cover",
-  },
-  cancelButton: {
-    top: 50,
-    left: 20,
-    zIndex: 1,
-    opacity: 0.7, // Adjust the opacity here
-  },
-  icon: {
-    fontWeight: 'bold', // Make the icon appear thicker
   },
   infoStyle: {
     marginTop: 12,
@@ -153,17 +122,14 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   cityText: {
-    marginTop: 5,
     fontSize: 16,
     fontWeight: "400",
   },
   contentText: {
-    marginTop: 12,
     fontSize: 12,
     color: "#71727A",
   },
   interest: {
-    marginTop: 15,
     fontSize: 12,
     fontWeight: "700",
   },
@@ -183,6 +149,12 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontSize: 10,
     fontWeight: "400",
+  },
+  cancelButton: {
+    top: 50,
+    left: 20,
+    zIndex: 1,
+    opacity: 0.7,
   },
   paginationContainer: {
     position: "absolute",
@@ -204,15 +176,6 @@ const styles = StyleSheet.create({
   inactiveDot: {
     backgroundColor: "#ccc",
   },
-  nameStyle: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  iconContainer:{
-    paddingBottom: 20,
-    paddingRight: 5,
-  },
 });
 
-export default OtherProfile;
+export default UserProfile;
