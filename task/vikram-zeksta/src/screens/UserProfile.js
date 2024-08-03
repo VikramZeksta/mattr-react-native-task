@@ -52,12 +52,14 @@ const UserProfile = () => {
           }}
         />
         <View style={styles.paginationContainer}>
-          {user.photos.map((_, index) => (
+          {user.photos.map((photo) => (
             <View
-              key={index}
+              key={photo.id} // Use photo.id as the key
               style={[
                 styles.dot,
-                activeSlide === index ? styles.activeDot : styles.inactiveDot,
+                activeSlide === user.photos.findIndex(p => p.id === photo.id)
+                  ? styles.activeDot
+                  : styles.inactiveDot,
               ]}
             />
           ))}
@@ -72,7 +74,7 @@ const UserProfile = () => {
         </Text>
         <View>
           <Text style={styles.contentText}>
-            Hey, I'm Frank, a 23-year-old marketing enthusiast who loves outdoor
+            Hey, I'm {user.first_name}, a {age}-year-old marketing enthusiast who loves outdoor
             adventures. Whether it's hiking or a cozy night in, I embrace every
             moment with enthusiasm. My infectious humor and love for deep
             conversations define me. I'm seeking a partner ready for genuine

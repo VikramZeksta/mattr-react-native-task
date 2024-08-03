@@ -15,6 +15,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 const OtherProfile = () => {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
   const navigation = useNavigation();
   const route = useRoute();
   const { userId } = route.params || {};
@@ -38,7 +39,7 @@ const OtherProfile = () => {
         style={styles.cancelButton}
         onPress={() => navigation.navigate("HomeTabs")}
       >
-        <Icon name="times" size={30} color={"#2F3036"} />
+        <Icon name="times" size={35} color={"#2F3036"} style={styles.icon} />
       </TouchableOpacity>
       <View style={styles.imageContainer}>
         <FlatList
@@ -58,31 +59,49 @@ const OtherProfile = () => {
           }}
         />
         <View style={styles.paginationContainer}>
-          {user.photos.map((_, index) => (
+          {user.photos.map((photo) => (
             <View
-              key={index}
+              key={photo.id} // Use photo.id as the key
               style={[
                 styles.dot,
-                activeSlide === index ? styles.activeDot : styles.inactiveDot,
+                activeSlide === user.photos.findIndex(p => p.id === photo.id)
+                  ? styles.activeDot
+                  : styles.inactiveDot,
               ]}
             />
           ))}
         </View>
       </View>
       <View style={styles.infoStyle}>
-        <Text style={styles.nameText}>
-          {user.first_name} {user.last_name}, {age}
-        </Text>
-        <Text style={styles.cityText}>
-          {user.location.city}, {user.location.country}
-        </Text>
+        <View style={styles.nameStyle}>
+          <View>
+            <Text style={styles.nameText}>
+              {user.first_name} {user.last_name}, {age}
+            </Text>
+            <Text style={styles.cityText}>
+              {user.location.city}, {user.location.country}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={() => setIsLiked(!isLiked)} 
+          >
+            <Icon
+              name="heart"
+              size={30}
+              color={isLiked ? "#CE1694" : "#ccc"} 
+            />
+          </TouchableOpacity>
+        </View>
+
         <View>
           <Text style={styles.contentText}>
-            Hey, I'm Frank, a 23-year-old marketing enthusiast who loves outdoor
-            adventures. Whether it's hiking or a cozy night in, I embrace every
-            moment with enthusiasm. My infectious humor and love for deep
-            conversations define me. I'm seeking a partner ready for genuine
-            connections and new adventures. Connect with me and let's dive in!
+            Hey, I'm {user.first_name}, a {age}-year-old marketing enthusiast
+            who loves outdoor adventures. Whether it's hiking or a cozy night
+            in, I embrace every moment with enthusiasm. My infectious humor and
+            love for deep conversations define me. I'm seeking a partner ready
+            for genuine connections and new adventures. Connect with me and
+            let's dive in!
           </Text>
           <Text style={styles.interest}>Interests</Text>
         </View>
@@ -120,6 +139,10 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
     zIndex: 1,
+    opacity: 0.7, // Adjust the opacity here
+  },
+  icon: {
+    fontWeight: 'bold', // Make the icon appear thicker
   },
   infoStyle: {
     marginTop: 12,
@@ -135,6 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
   contentText: {
+    marginTop: 12,
     fontSize: 12,
     color: "#71727A",
   },
@@ -179,6 +203,15 @@ const styles = StyleSheet.create({
   },
   inactiveDot: {
     backgroundColor: "#ccc",
+  },
+  nameStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  iconContainer:{
+    paddingBottom: 20,
+    paddingRight: 5,
   },
 });
 

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types"; 
 import {
   Text,
   View,
@@ -11,27 +12,43 @@ import appStyles from "../styles/appStyles";
 import { useNavigation } from "@react-navigation/native";
 import { calculateAge } from "../utils/dateUtils";
 
+import dummyImage from "../../assets/blankImage.png"; 
 
-const ProfileCard = ({userId,firstName,lastName,dob, city, image}) => {
+const ProfileCard = ({ userId, firstName, lastName, dob, city, image, country }) => {
   const navigation = useNavigation();
-    const age = calculateAge(dob);
+  const age = calculateAge(dob);
+  const imageSource = image ? { uri: image } : dummyImage;
+
   return (
     <View style={styles.cardContainer}>
-      <Image
-        style={styles.imageStyle}
-        source={{uri:image}}
-      />
-      <View style={styles.infoStyle}>
-        <Text style={styles.nameText}>{firstName} {lastName}, {age}</Text>
-        <Text style={styles.blackBtnText}>{city}</Text>
-      </View>
+      <Image style={styles.imageStyle} source={imageSource} />
+      <View>
+        <View style={styles.infoStyle}>
+          <Text style={styles.nameText}>
+            {firstName} {lastName}, {age}
+          </Text>
+          <Text style={styles.blackBtnText}>{city}, {country}</Text>
+        </View>
 
-      <TouchableOpacity style={styles.viewBtn} 
-       onPress={() => navigation.navigate("OtherProfile", { userId })}>
-        <Text style={[appStyles.btnText]}>Profile View</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.viewBtn}
+          onPress={() => navigation.navigate("OtherProfile", { userId })}
+        >
+          <Text style={[appStyles.btnText]}>Profile View</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
+};
+
+ProfileCard.propTypes = {
+  userId: PropTypes.string.isRequired,
+  firstName: PropTypes.string.isRequired,
+  lastName: PropTypes.string.isRequired,
+  dob: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  image: PropTypes.string,
+  country: PropTypes.string.isRequired,
 };
 
 const deviceWidth = Math.round(Dimensions.get("window").width);
@@ -39,14 +56,10 @@ const redius = 25;
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: "#fff",
-    // alignItems: "center",
-    //   justifyContent: "center",
+    backgroundColor: '#fafafa',
     borderRadius: 25,
     width: deviceWidth - 50,
-    backgroundColor: "#fafafa",
     height: 350,
-    // marginHorizontal: 20,
   },
   imageStyle: {
     height: 237,
@@ -66,19 +79,19 @@ const styles = StyleSheet.create({
   },
   viewBtn: {
     paddingVertical: 7,
-    alignItems:'center',
-    justifyContent:'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "transparent",
     marginTop: 15,
     borderWidth: 1,
     borderColor: "#CE1694",
     borderRadius: 12,
-    marginHorizontal:15
+    marginHorizontal: 15,
   },
-  infoStyle:{
-    marginTop:12,
-    marginHorizontal:15
-  }
+  infoStyle: {
+    marginTop: 12,
+    marginHorizontal: 15,
+  },
 });
 
 export default ProfileCard;

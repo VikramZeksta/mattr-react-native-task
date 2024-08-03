@@ -7,11 +7,46 @@ import {
   Dimensions,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Picker } from "@react-native-picker/picker";
+import data from "../../assets/data.json";
+import { calculateAge } from "../utils/dateUtils";
 
 const FilterProfile = () => {
   const navigation = useNavigation();
   const [gender, setGender] = useState("FEMALE");
-  const [ageRange, setAgeRange] = useState("25 - 30");
+  const [ageRange, setAgeRange] = useState("25-30");
+  const [selectedValue, setSelectedValue] = useState("Score");
+
+  const applyFilter = () => {
+    let filteredData = [...data];
+    if (gender) {      
+      filteredData = filteredData.filter((user) => user.gender == gender.toLocaleLowerCase());
+    }
+
+    if (ageRange) {
+      const [minAge, maxAge] = ageRange.split("-").map(Number);      
+      filteredData = filteredData.filter((user) => {
+        const userAge = calculateAge(user.dob);        
+        return userAge >= minAge &&  userAge <= maxAge;
+      });      
+    }
+
+    if (selectedValue === "Score") {
+      filteredData = filteredData.sort((a, b) => b.score - a.score);
+    } else {
+      filteredData = filteredData.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    }
+ 
+    console.log('fiterpage', filteredData);
+    
+    navigation.navigate('Activity', { filteredData:filteredData }); 
+  };
+
+  const clearAll = () =>{
+    setGender('FEMALE');
+    setAgeRange('25-30');
+    setSelectedValue('Score');
+  }
 
   return (
     <View style={styles.container}>
@@ -21,7 +56,7 @@ const FilterProfile = () => {
         </TouchableOpacity>
         <Text style={styles.title}>Filter</Text>
         <TouchableOpacity>
-          <Text style={styles.clearText}>Clear All</Text>
+          <Text style={styles.clearText} onPress={clearAll}>Clear All</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.hr} />
@@ -66,7 +101,7 @@ const FilterProfile = () => {
       <View style={styles.AgeContainer}>
         <Text style={styles.genderText}>Age Ranges</Text>
         <View style={styles.ageRangesContainer}>
-          {["20 - 24", "25 - 30", "30 - 40", "40 +"].map((range) => (
+          {["20-24", "25-30", "30-40", "40-50"].map((range) => (
             <TouchableOpacity
               key={range}
               style={[
@@ -90,9 +125,21 @@ const FilterProfile = () => {
       <View style={styles.hr} />
       <View style={styles.sortByContainer}>
         <Text style={styles.sortByText}>Sort By</Text>
+        <View style={styles.selectContainer}>
+          <Picker
+            selectedValue={selectedValue}
+            style={styles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              setSelectedValue(itemValue)
+            }
+          >
+            <Picker.Item label="Score" value="Score" />
+            <Picker.Item label="Date Joined" value="Date Joined" />
+          </Picker>
+        </View>
       </View>
       <View style={styles.applyFilterCont}>
-        <TouchableOpacity style={styles.fiterBtn}>
+        <TouchableOpacity style={styles.fiterBtn} onPress={applyFilter}>
           <Text style={[styles.btnText]}>Apply Filter</Text>
         </TouchableOpacity>
       </View>
@@ -218,6 +265,20 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 12,
     color: "#FFF",
+  },
+  selectContainer: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#C5C6CC",
+    borderRadius: 10,
+    overflow: "hidden",
+    marginTop: 10,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    fontSize: 14,
+    color: "#8F9098",
   },
 });
 
