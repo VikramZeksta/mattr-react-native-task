@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useCallback  } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useState, useEffect, useCallback } from "react";
+import { StyleSheet, View, Animated } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import Header from "../components/Header";
 import ProfileCard from "../components/ProfileCard";
 import data from "../../assets/data.json";
 
-
 const HomeScreen = () => {
   const route = useRoute();
   const [displayData, setDisplayData] = useState([]);
-
-  console.log(displayData,14);
-  
+  const [scrollY] = useState(new Animated.Value(0));
+  const [headerVisible, setHeaderVisible] = useState(true);
+  const [lastOffset, setLastOffset] = useState(0);
 
   const getRandomItems = () => {
     const shuffled = data.sort(() => 0.5 - Math.random());
@@ -20,8 +19,6 @@ const HomeScreen = () => {
 
   useEffect(() => {
     if (route.params?.filteredData) {
-      console.log(route.params?.filteredData,23);
-      
       setDisplayData(route.params.filteredData);
     } else {
       setDisplayData(getRandomItems());
@@ -32,10 +29,39 @@ const HomeScreen = () => {
     setDisplayData(getRandomItems());
   }, []);
 
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [100, 0],
+    extrapolate: "clamp",
+  });
+
+  const handleScroll = ({ nativeEvent }) => {
+    const currentOffset = nativeEvent.contentOffset.y;
+    const direction = currentOffset > lastOffset ? "down" : "up";
+    const diff = Math.abs(currentOffset - lastOffset);
+
+    if (diff > 10) {
+      setHeaderVisible(direction === "up");
+    }
+
+    setLastOffset(currentOffset);
+  };
+
   return (
     <View style={styles.container}>
-      <Header onRefresh={handleRefresh} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      {headerVisible && (
+        <Animated.View style={[styles.header, { height: headerHeight }]}>
+          <Header onRefresh={handleRefresh} />
+        </Animated.View>
+      )}
+      <Animated.ScrollView
+        showsVerticalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false, listener: handleScroll }
+        )}
+        scrollEventThrottle={16}
+      >
         <View style={styles.content}>
           {displayData.map((user) => (
             <ProfileCard
@@ -50,7 +76,7 @@ const HomeScreen = () => {
             />
           ))}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 };
@@ -60,12 +86,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    paddingTop: 20, 
+    paddingTop: 30,
+  },
+  header: {
+    position: "absolute",
+    top: 10,
+    left: 0,
+    right: 0,
+    zIndex: 1,
+    backgroundColor: "#fff",
   },
   content: {
     flex: 1,
     alignItems: "center",
     gap: 10,
+    marginTop: 100,
   },
 });
 
